@@ -17,7 +17,7 @@ io.use((socket, next) => {
 io.on("connection", socket => {
   // fetch existing users
   const users = [];
-  for (let [id, socket] of io.of("/").socket) {
+  for (let [id, socket] of io.of("/").sockets) {
     users.push({
       userID: id,
       username: socket.username
