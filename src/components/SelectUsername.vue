@@ -2,7 +2,7 @@
   <div class="select-username">
     <form @submit.prevent="onSubmit">
       <input v-model="username" placeholder="Your username..." />
-      <button :disabled="!isValid">Send</button>
+      <input type="submit" value="Send" />
     </form>
   </div>
 </template>
@@ -22,7 +22,8 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$emit("input", this.username);
+      console.log("subbmited");
+      this.$emit("text-input", this.username);
     }
   }
 };
