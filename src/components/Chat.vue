@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>chat room</h1>
+    <div class="left-pannel"></div>
   </div>
 </template>
 
