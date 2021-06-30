@@ -1,14 +1,35 @@
 <template>
   <div>
-    <div class="left-pannel"></div>
+    <h1>chat</h1>
+    <div class="left-panel">
+      <User
+        v-for="user in users"
+        :key="user.userID"
+        :user="user"
+        :selected="selectedUser === user"
+        @select="onSelectUser(user)"
+      />
+    </div>
+    <MessagePanel
+      v-if="selectedUser"
+      :user="selectedUser"
+      @textInput="onMessage"
+      class="right-panel"
+    />
   </div>
 </template>
 
 <script>
 import socket from "../socket";
+import User from "./User.vue";
+import MessagePanel from "./MessagePanel.vue";
 
 export default {
   name: "Chat",
+  components: {
+    User,
+    MessagePanel
+  },
   data() {
     return {
       selectedUser: null,
@@ -17,6 +38,7 @@ export default {
   },
   methods: {
     onMessage(content) {
+      console.log("onMessage", content);
       if (this.selectedUser) {
         socket.emit("private message", {
           content,
@@ -29,8 +51,10 @@ export default {
       }
     },
     onSelectUser(user) {
+      console.log("selected user: ", user.userID);
       this.selectedUser = user;
       user.hasNewMessages = false;
+      console.log("selected user data: ", this.selectedUser);
     }
   },
   created() {
@@ -71,8 +95,11 @@ export default {
     });
 
     socket.on("user connected", user => {
+      console.log("1 user", user);
       initReactiveProperties(user);
+      console.log("2 user", user);
       this.users.push(user);
+      console.log("3 users: ", this.users);
     });
 
     socket.on("user disconnected", id => {

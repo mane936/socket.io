@@ -23,11 +23,11 @@ io.on("connection", socket => {
       username: socket.username
     });
   }
-  socket.emit("users", users);
+  socket.emit("users", users); // notify connecting user
 
   // notify existing users
   socket.broadcast.emit("user connected", {
-    userId: socket.id,
+    userID: socket.id,
     username: socket.username
   });
 
