@@ -11,13 +11,18 @@
         class="message"
       >
         <div v-if="displaySender(message, index)" class="sender">
-          {{ message.fromSelf ? "(yourself)" : user.username }}
+          {{ message.fromSelf ? "(yourself)" : user.username }}:
         </div>
+        {{ message.content }}
       </li>
     </ul>
 
     <form @submit.prevent="onSubmit" class="form">
-      <textarea v-model="input" placeholder="Your message..." class="input" />
+      <textarea
+        v-model="textInput"
+        placeholder="Your message..."
+        class="input"
+      />
       <button :disabled="!isValid" class="send-button">Send</button>
     </form>
   </div>
@@ -34,25 +39,27 @@ export default {
   },
   data() {
     return {
-      input: ""
+      textInput: ""
     };
   },
   methods: {
     onSubmit() {
-      this.$emit("textInput", this.input);
-      this.input = "";
+      this.$emit("textInput", this.textInput);
+      this.textInput = "";
     },
     displaySender(message, index) {
+      console.log("message from chat:  ", message, "index: ", index);
+      // if (!index) index = 0;
       return (
         index === 0 ||
-        this.user.messages[index - 1].formSelf !==
+        this.user.messages[index - 1].fromSelf !==
           this.user.messages[index].fromSelf
       );
     }
   },
   computed: {
     isValid() {
-      return this.input.length > 0;
+      return this.textInput.length > 0;
     }
   }
 };

@@ -118,11 +118,12 @@ export default {
         if (user.userID === from) {
           user.messages.push({
             content,
-            formSelf: false
+            fromSelf: false
           });
           if (user !== this.selectedUser) {
             user.hasNewMessages = true;
           }
+          console.log("user me: ", user);
           break;
         }
       }
