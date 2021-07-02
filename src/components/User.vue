@@ -5,7 +5,7 @@
         {{ user.username }} {{ user.self ? " (yourself)" : "" }}
       </div>
       <div class="status">
-        status icon
+        <StatusIcon :connected="user.connected" /> {{ status }}
       </div>
     </div>
     <div v-if="user.hasNewMessages" class="new-messages">!</div>
@@ -13,8 +13,11 @@
 </template>
 
 <script>
+import StatusIcon from "./StatusIcon.vue";
+
 export default {
   name: "User",
+  components: { StatusIcon },
   props: {
     user: Object,
     selected: Boolean
@@ -23,12 +26,12 @@ export default {
     onClick() {
       this.$emit("select", this.user);
     }
+  },
+  computed: {
+    status() {
+      return this.user.connected ? "online" : "offline";
+    }
   }
-  // computed: {
-  //   status() {
-  //     return this.user.connected ? "online" : "offline";
-  //   }
-  // }
 };
 </script>
 

@@ -83,9 +83,10 @@ export default {
     socket.on("users", users => {
       users.forEach(user => {
         user.self = user.userID === socket.id;
+        console.log("user.self: ", user.self);
         initReactiveProperties(user);
       });
-      // Put the current user first
+      // Put the current (yourself) user first, and then sort by username
       this.users = users.sort((a, b) => {
         if (a.self) return -1;
         if (b.self) return 1;
@@ -95,11 +96,8 @@ export default {
     });
 
     socket.on("user connected", user => {
-      console.log("1 user", user);
       initReactiveProperties(user);
-      console.log("2 user", user);
       this.users.push(user);
-      console.log("3 users: ", this.users);
     });
 
     socket.on("user disconnected", id => {

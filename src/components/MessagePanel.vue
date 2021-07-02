@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header">
-      status icon
+      <StatusIcon :connected="user.connected" /> {{ user.username }}
     </div>
 
     <ul class="messages">
@@ -29,11 +29,13 @@
 </template>
 
 <script scoped>
+import StatusIcon from "./StatusIcon.vue";
+
 export default {
   name: "MessagePanel",
-  // components: {
-  //   StatusIcon,
-  // },
+  components: {
+    StatusIcon
+  },
   props: {
     user: Object
   },

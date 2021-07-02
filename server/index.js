@@ -38,6 +38,12 @@ io.on("connection", socket => {
       from: socket.id
     });
   });
+
+  // notify users upon disconnection
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+    socket.broadcast.emit("user disconnected", socket.id);
+  });
 });
 
 const PORT = process.env.PORT || 3000;
