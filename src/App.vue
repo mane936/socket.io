@@ -25,18 +25,35 @@ export default {
   },
   methods: {
     onUsernameSelection(username) {
-      console.log("Triggered ", username);
       this.usernameAlreadySelected = true;
       socket.auth = { username };
       socket.connect();
     }
   },
   created() {
-    socket.on("connect_error", err => {
-      if (err.message === "invalid username") {
-        this.usernameAlreadySelected = false;
-      }
-    });
+	const sessionID = localStorage.getItem("sessionID");
+
+	if(sessionID) {
+		this.usernameAlreadySelected = true;
+		socket.auth = { sessionID };
+		socket.connect();
+	}
+
+	// whether already a session or username, the server will always return a sessionID and userID.
+	socket.on("session", ({ sessionID, userID }) => {
+		// attach the sessionID to the next recconnection attempts
+		socket.auth = { sessionID };
+		// store it in th elocalStorage
+		localStorage.setItem("sessionID", sessionID);
+		// save the ID of the user
+		socket.userID = userID;
+	})
+
+  socket.on("connect_error", err => {
+    if (err.message === "invalid username") {
+      this.usernameAlreadySelected = false;
+    }
+  });
   },
   unmounted() {
     socket.off("connect_error");

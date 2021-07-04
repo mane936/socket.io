@@ -20,7 +20,7 @@ class InMemorySessionStore extends SessionStore {
 	}
 
 	findAllSessions() {
-		return [this.sessions.values()];
+		return [...this.sessions.values()];
 	}
 }
 
