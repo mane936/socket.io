@@ -96,6 +96,17 @@ export default {
     });
 
     socket.on("user connected", user => {
+      console.log("user connected: ", user);
+      for (let i = 0; i < this.users.length; i++) {
+        const existingUser = this.users[i];
+        console.log("user ", i, ": ", existingUser);
+        if (existingUser.userID === user.userID) {
+          console.log("happened 1");
+          existingUser.connected = true;
+          return;
+        }
+      }
+      console.log("happened 2");
       initReactiveProperties(user);
       this.users.push(user);
     });

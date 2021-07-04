@@ -13,10 +13,14 @@ const sessionStore = new InMemorySessionStore();
 
 io.use((socket, next) => {
   // if user sends sessionID fetch it.
+  console.log("happened middleware");
   const sessionID = socket.handshake.auth.sessionID;
+  console.log("sessionID: ", sessionID);
   if (sessionID) {
     const session = sessionStore.findSession(sessionID);
     if (session) {
+      console.log("sessionID happened: ", session);
+
       socket.sessionID = sessionID;
       socket.userID = session.userID;
       socket.username = session.username;
@@ -79,7 +83,7 @@ io.on("connection", socket => {
 
   // notify existing users
   socket.broadcast.emit("user connected", {
-    userID: socket.id,
+    userID: socket.userID,
     username: socket.username,
     connected: true
   });
