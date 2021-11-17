@@ -10,10 +10,12 @@ class InMemoryMessageStore extends MessageStore {
   }
 
   saveMessage(message) {
+    console.log("save message: ", message);
     this.messages.push(message);
   }
 
   findMessagesForUser(userID) {
+    console.log("find messages for user: ", userID);
     return this.messages.filter(
       ({ from, to }) => from === userID || to === userID
     );

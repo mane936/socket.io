@@ -73,10 +73,12 @@ io.on("connection", socket => {
   //  socket.emit("users", users); // notify connecting user
 
   // fetch existing users (with persistent session)
+
   const users = [];
   const messagesPerUser = new Map();
 
   messageStore.findMessagesForUser(socket.userID).forEach(message => {
+    console.log("messageFound: ", message);
     const { from, to } = message;
     const otherUser = socket.userID === from ? to : from;
     if (messagesPerUser.has(otherUser)) {
@@ -86,14 +88,18 @@ io.on("connection", socket => {
     }
   });
 
+  console.log("messagesPerUser: ", messagesPerUser);
+
   sessionStore.findAllSessions().forEach(session => {
     users.push({
       userID: session.userID,
       username: session.username,
       connected: session.connected,
-      messages: messagesPerUser.get(session.userID) || []
+      messages: JSON.stringify(messagesPerUser.get(session.userID)) || '[]'
     });
   });
+
+  console.log("users to emit: ", users);
 
   socket.emit("users", users);
 
@@ -101,7 +107,8 @@ io.on("connection", socket => {
   socket.broadcast.emit("user connected", {
     userID: socket.userID,
     username: socket.username,
-    connected: true
+    connected: true,
+    messages: '[]'
   });
 
   //	// old way (without persistent users)

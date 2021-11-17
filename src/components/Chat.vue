@@ -81,8 +81,26 @@ export default {
     };
 
     socket.on("users", users => {
+      console.log("remote users", users)
       users.forEach(user => {
-        user.self = user.userID === socket.id;
+        console.log("remoteUsermessage: ", user.messages)
+        const messages = JSON.parse(user.messages);
+        user.messages = messages;
+        console.log("user.messages is:", user.messages)
+        user.messages.forEach((message)=>{
+          message.fromSelf = message.from === socket.userID;
+        });
+
+        for(let i = 0; i<this.users.length; i++) {
+          const existingUser = this.users[i];
+          if(existingUser.userID === user.userID) {
+              existingUser.connected = user.connected
+              existingUser.messages = user.messages
+            }
+        }
+
+
+//        user.self = user.userID === socket.id; //Varies by session (?)
         console.log("user.self: ", user.self);
         initReactiveProperties(user);
       });
@@ -97,6 +115,7 @@ export default {
 
     socket.on("user connected", user => {
       console.log("user connected: ", user);
+      //checks wether the user reconnecting (or from other tab) is already in the list
       for (let i = 0; i < this.users.length; i++) {
         const existingUser = this.users[i];
         console.log("user ", i, ": ", existingUser);
