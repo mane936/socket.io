@@ -1,4 +1,0 @@
-- Socket.io
-	1.   "socket.emit("users", users);" emits right user object, but "socket.on("users", users =..." Doesn't receives it right. 
-		a. Deep objects? Any property from socket connection missed? 
-		b. Try to run GitHub tutorial code to see if it works well

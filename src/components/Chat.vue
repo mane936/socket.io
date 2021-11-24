@@ -83,34 +83,46 @@ export default {
     socket.on("users", users => {
       console.log("remote users", users)
       users.forEach(user => {
+
         console.log("remoteUsermessage: ", user.messages)
+        // initReactiveProperties(user);
         const messages = JSON.parse(user.messages);
+        if(! messages) return 
+
+        
         user.messages = messages;
+        console.log("messages is:", messages)
         console.log("user.messages is:", user.messages)
         user.messages.forEach((message)=>{
           message.fromSelf = message.from === socket.userID;
         });
 
-        for(let i = 0; i<this.users.length; i++) {
+        console.log("this.users", this.users)
+
+        for(let i = 0; i< this.users.length; i++) {
           const existingUser = this.users[i];
+          console.log("existingUsers", existingUser)
           if(existingUser.userID === user.userID) {
               existingUser.connected = user.connected
               existingUser.messages = user.messages
+              console.log("existingUser.connected", existingUser.connected)
+              console.log("existingUser.message", existingUser.messages)
             }
         }
+        });
 
 
-//        user.self = user.userID === socket.id; //Varies by session (?)
-        console.log("user.self: ", user.self);
-        initReactiveProperties(user);
-      });
-      // Put the current (yourself) user first, and then sort by username
       this.users = users.sort((a, b) => {
         if (a.self) return -1;
         if (b.self) return 1;
         if (a.username < b.username) return -1;
         return a.username > b.username ? 1 : 0;
       });
+
+      // user.self = user.userID === socket.id; //Varies by session (?)
+        console.log("user.self: ", user.self);
+      // Put the current (yourself) user first, and then sort by username
+      
     });
 
     socket.on("user connected", user => {
